@@ -2,24 +2,36 @@ package com.example.stockManager.service;
 
 import com.example.stockManager.exception.ProductNotFoundException;
 import com.example.stockManager.model.Product;
+import com.example.stockManager.model.Supplier;
 import com.example.stockManager.repository.ProductRepository;
+import com.example.stockManager.repository.SupplierRepository;
 import org.springframework.stereotype.Service;
+import com.example.stockManager.exception.SupplierNotFoundException;
 import java.util.List;
 
 @Service
 public class ProductService {
     // The ProductService class is responsible for handling business logic related to products. It interacts with the ProductRepository to perform CRUD operations on Product entities.
-    private final ProductRepository repo;
+
+    private final ProductRepository repo; // Declare a private final field for the ProductRepository, which will be used to interact with the database.
+
+    private final SupplierRepository supplierRepo; // Declare a private final field for the SupplierRepository, which will be used to interact with suppliers.
 
     // Constructor injection of the ProductRepository
-    public ProductService(ProductRepository repo) {
+    public ProductService(ProductRepository repo, SupplierRepository supplierRepo) {
         this.repo = repo;
+        this.supplierRepo = supplierRepo;
     }
 
     // Find a product by its ID, throwing an exception if not found
     public Product findById(Long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    public Supplier findByIdSupplier(Long id) {
+        return supplierRepo.findById(id)
+                .orElseThrow(() -> new SupplierNotFoundException(id));
     }
 
     // Retrieve all products from the repository
@@ -29,6 +41,8 @@ public class ProductService {
 
     // Create a new product in the repository
     public Product create(Product product) {
+        Supplier supplier = findByIdSupplier(product.getSupplier().getId()); // Find the supplier by ID to ensure it exists
+        product.setSupplier(supplier); // Set the supplier for the product
         return repo.save(product); // Call the repository to save the new product and return the saved product
     }
 

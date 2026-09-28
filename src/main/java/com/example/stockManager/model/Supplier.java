@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity 
 public class Supplier {
@@ -13,7 +14,10 @@ public class Supplier {
     private Long id;
 
     // -- Attributes --
+    @NotBlank (message = "Nama supplier tidak boleh kosong") //menolak null, string kosong (""), maupun yang isinya hanya spasi (" "). Ini lebih ketat daripada @NotNull.
     private String name;
+
+    @NotBlank (message = "Kota supplier tidak boleh kosong") //menolak null, string kosong (""), maupun yang isinya hanya spasi (" "). Ini lebih ketat daripada @NotNull.
     private String city;
     
     // -- Constructor --
