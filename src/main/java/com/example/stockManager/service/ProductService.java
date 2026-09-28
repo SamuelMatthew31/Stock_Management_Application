@@ -30,7 +30,6 @@ public class ProductService {
     // Create a new product in the repository
     public Product create(Product product) {
         return repo.save(product); // Call the repository to save the new product and return the saved product
-
     }
 
     // Delete a product by its ID, returning the deleted product

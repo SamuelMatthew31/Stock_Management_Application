@@ -26,6 +26,7 @@ public class GlobalExceptionHandler {
     // The handleValidationErrors method is responsible for handling MethodArgumentNotValidException, which occurs when validation of request parameters fails. It returns a structured response with the appropriate HTTP status code and validation error details.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     // This method handles validation errors and returns a structured response with the appropriate HTTP status code and error details.
+    
     public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex){
         Map<String, Object> body = new HashMap<>(); // Create a map to hold the response body
         body.put("status", HttpStatus.BAD_REQUEST.value()); // Set the HTTP status code to 400 (BAD_REQUEST)
@@ -36,5 +37,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST); // Return a ResponseEntity with the response body and the BAD_REQUEST status
     }
 
+    // The handleSupplierNotFound method is responsible for handling SupplierNotFoundException and returning a structured response with the appropriate HTTP status code and error message.
+    @ExceptionHandler(SupplierNotFoundException.class)
 
+    // This method handles SupplierNotFoundException and returns a structured response with the appropriate HTTP status
+    public ResponseEntity<Map<String, Object>> handleNotFound(SupplierNotFoundException ex){
+        Map<String, Object> body = new HashMap<>(); // Create a map to hold the response body
+        body.put("status", HttpStatus.NOT_FOUND.value()); // Set the HTTP status code to 404 (NOT_FOUND)
+        body.put("message", ex.getMessage()); // Set the error message from the exception
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND); // Return a ResponseEntity with the response body and the NOT_FOUND status
+    }
 }

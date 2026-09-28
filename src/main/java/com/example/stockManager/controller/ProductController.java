@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 public class ProductController {
     // The ProductController class is responsible for handling HTTP requests related to products. It uses the ProductService to perform operations on Product entities.
     private final ProductService service;
-
+    
     public ProductController(ProductService service) {
         this.service = service; // Constructor injection of the ProductService
     }
