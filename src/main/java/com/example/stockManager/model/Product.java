@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.math.BigDecimal;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.persistence.ManyToOne;
@@ -15,6 +16,8 @@ import jakarta.persistence.JoinColumn;
 @Entity
 public class Product {
 
+
+    @NotNull(message = "Supplier tidak boleh kosong") //menolak null, string kosong (""), maupun yang isinya hanya spasi (" "). Ini lebih ketat daripada @NotNull.
     @ManyToOne
     @JoinColumn(name = "supplier_id")
     private Supplier supplier; // This field represents the supplier associated with the product. It is not annotated with JPA annotations, so it will not be persisted in the database. You may want to add appropriate annotations if you intend to establish a relationship between Product and Supplier entities.

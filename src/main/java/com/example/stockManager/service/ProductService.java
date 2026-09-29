@@ -29,7 +29,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
-    public Supplier findByIdSupplier(Long id) {
+    public Supplier findSupplierById(Long id) {
         return supplierRepo.findById(id)
                 .orElseThrow(() -> new SupplierNotFoundException(id));
     }
@@ -41,7 +41,7 @@ public class ProductService {
 
     // Create a new product in the repository
     public Product create(Product product) {
-        Supplier supplier = findByIdSupplier(product.getSupplier().getId()); // Find the supplier by ID to ensure it exists
+        Supplier supplier = findSupplierById(product.getSupplier().getId()); // Find the supplier by ID to ensure it exists
         product.setSupplier(supplier); // Set the supplier for the product
         return repo.save(product); // Call the repository to save the new product and return the saved product
     }

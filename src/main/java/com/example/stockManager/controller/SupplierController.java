@@ -4,6 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import com.example.stockManager.model.Supplier;
 import com.example.stockManager.service.SupplierService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,7 @@ public class SupplierController {
 
     @PostMapping
     @ResponseStatus (HttpStatus.CREATED)
-    public Supplier create(@RequestBody Supplier supplier) {
+    public Supplier create(@Valid @RequestBody Supplier supplier) {
         return service.create(supplier); // Call the service to create a new supplier and return the created supplier
     }
     
