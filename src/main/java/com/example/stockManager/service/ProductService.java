@@ -1,5 +1,6 @@
 package com.example.stockManager.service;
 
+import com.example.stockManager.dto.ProductRequest;
 import com.example.stockManager.exception.ProductNotFoundException;
 import com.example.stockManager.model.Product;
 import com.example.stockManager.model.Supplier;
@@ -7,6 +8,7 @@ import com.example.stockManager.repository.ProductRepository;
 import com.example.stockManager.repository.SupplierRepository;
 import org.springframework.stereotype.Service;
 import com.example.stockManager.exception.SupplierNotFoundException;
+import com.example.stockManager.dto.ProductRequest;
 import java.util.List;
 
 @Service
@@ -40,8 +42,9 @@ public class ProductService {
     }
 
     // Create a new product in the repository
-    public Product create(Product product) {
-        Supplier supplier = findSupplierById(product.getSupplier().getId()); // Find the supplier by ID to ensure it exists
+    public Product create(ProductRequest request) {
+        Supplier supplier = findSupplierById(request.supplierId()); // Find the supplier by ID to ensure it exists
+        Product product = new Product(request.name(), request.stock(), request.price());
         product.setSupplier(supplier); // Set the supplier for the product
         return repo.save(product); // Call the repository to save the new product and return the saved product
     }
@@ -55,7 +58,7 @@ public class ProductService {
 
     // Update an existing product by its ID with new data
     public Product update(Long id, Product data) {
-        
+
         Product product = findById(id);
 
         product.setName(data.getName());
@@ -66,4 +69,3 @@ public class ProductService {
         return repo.save(product);
     }
 }
-

@@ -9,6 +9,7 @@ A Spring Boot REST API for managing products and suppliers. Product records are 
 - Associate a product with an existing supplier
 - Validate product names, stock quantities, and prices
 - Return structured responses for not-found and product-validation errors
+- **Separation of Concerns:** Implementation of Data Transfer Objects (DTO) and Mapper pattern to decouple entities from the API layer
 
 ## Technology
 
@@ -161,6 +162,13 @@ Run the packaged application:
 java -jar target/stockManager-0.0.1-SNAPSHOT.jar
 ```
 
+## Architecture Improvements: DTO and Mapper
+
+The application architecture has recently been enhanced with the introduction of **Data Transfer Objects (DTO)** and a **Mapper Layer**:
+
+- **DTO (Data Transfer Object)**: `ProductRequest` and `ProductResponse` classes were introduced in the new `dto/` package. This creates a clear boundary between the API layer and the internal database layer (JPA entities). It prevents domain model leakage, avoids over-posting vulnerabilities, and helps structure the API payloads cleanly.
+- **Mapper Pattern**: A `ProductMapper` class was implemented in the `mapper/` package. This component safely handles the transformation of internal `Product` entities into `ProductResponse` DTOs and `ProductRequest` DTOs back into entities mappings. This keeps the controller and service classes clean, highly cohesive, and tightly focused on HTTP routing and business logic respectively.
+
 ## Project Structure
 
 ```text
@@ -168,7 +176,9 @@ src/
 	main/
 		java/com/example/stockManager/
 			controller/    REST endpoints
+			dto/           Data Transfer Objects (e.g., ProductRequest, ProductResponse)
 			exception/     Not-found exceptions and global error handling
+			mapper/        Mapping logic between Entities and DTOs (e.g., ProductMapper)
 			model/         Product and Supplier JPA entities
 			repository/    Spring Data JPA repositories
 			service/       Application and persistence operations
