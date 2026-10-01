@@ -8,7 +8,8 @@ import com.example.stockManager.repository.ProductRepository;
 import com.example.stockManager.repository.SupplierRepository;
 import org.springframework.stereotype.Service;
 import com.example.stockManager.exception.SupplierNotFoundException;
-import com.example.stockManager.dto.ProductRequest;
+import com.example.stockManager.dto.ProductResponse;
+import com.example.stockManager.mapper.ProductMapper;
 import java.util.List;
 
 @Service
@@ -26,46 +27,48 @@ public class ProductService {
     }
 
     // Find a product by its ID, throwing an exception if not found
-    public Product findById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException(id));
+    public ProductResponse findById(Long id) {
+        return ProductMapper.toResponse(getProductEntity(id)); // Map the product entity to a response and return it
     }
 
+    // Find a supplier by its ID, throwing an exception if not found
     public Supplier findSupplierById(Long id) {
-        return supplierRepo.findById(id)
-                .orElseThrow(() -> new SupplierNotFoundException(id));
+        return supplierRepo.findById(id) // Call the repository to find the supplier by ID
+                .orElseThrow(() -> new SupplierNotFoundException(id)); // Throw an exception if the supplier is not found
     }
 
     // Retrieve all products from the repository
-    public List<Product> findAll() {
-        return repo.findAll(); // Call the repository to retrieve all products and return the list
+    public List<ProductResponse> findAll() {
+        return repo.findAll().stream().map(ProductMapper::toResponse).toList(); // Call the repository to retrieve all products and return the list
+    }
+
+    // Find a product by its ID, throwing an exception if not found
+    private Product getProductEntity(Long id) {
+        return repo.findById(id) // Call the repository to find the product by ID
+                .orElseThrow(() -> new ProductNotFoundException(id)); // Throw an exception if the product is not found
     }
 
     // Create a new product in the repository
-    public Product create(ProductRequest request) {
+    public ProductResponse create(ProductRequest request) {
         Supplier supplier = findSupplierById(request.supplierId()); // Find the supplier by ID to ensure it exists
-        Product product = new Product(request.name(), request.stock(), request.price());
-        product.setSupplier(supplier); // Set the supplier for the product
-        return repo.save(product); // Call the repository to save the new product and return the saved product
+        Product product = ProductMapper.toEntity(request, supplier); // Map the request data to a product entity
+        return ProductMapper.toResponse(repo.save(product)); // Map the saved product to a response and return it
     }
 
     // Delete a product by its ID, returning the deleted product
-    public Product delete(Long id) {
-        Product product = findById(id);
-        repo.delete(product);
-        return product;
+    public void delete(Long id) {
+        Product product = getProductEntity(id); // Find the product by ID to ensure it exists
+        repo.delete(product); // Delete the product from the repository
     }
 
     // Update an existing product by its ID with new data
-    public Product update(Long id, Product data) {
-
-        Product product = findById(id);
-
-        product.setName(data.getName());
-        product.setPrice(data.getPrice());
-        product.setStock(data.getStock());
-
-        // Update product fields with data from 'data' object
-        return repo.save(product);
+    public ProductResponse update(Long id, ProductRequest data) {
+        Product product = getProductEntity(id); // Find the product by ID to ensure it exists
+        Supplier supplier = findSupplierById(data.supplierId()); // Find the supplier by ID to ensure it exists
+        product.setName(data.name()); // Update the product name
+        product.setPrice(data.price()); // Update the product price
+        product.setStock(data.stock()); // Update the product stock
+        product.setSupplier(supplier); // Update the product supplier
+        return ProductMapper.toResponse(repo.save(product)); // Map the updated product to a response and return it
     }
 }

@@ -9,7 +9,9 @@ import jakarta.validation.constraints.NotNull;
 
 
 public record ProductRequest(
-    @NotBlank String name,
+
+    @NotBlank (message = "Nama tidak boleh kosong")
+    String name,
 
     @NotNull(message = "Stok tidak boleh kosong")
     @Min(value = 0, message = "Stok tidak boleh negatif")
