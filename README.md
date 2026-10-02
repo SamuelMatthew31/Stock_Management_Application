@@ -10,6 +10,8 @@ A Spring Boot REST API for managing products and suppliers. Product records are 
 - Validate product names, stock quantities, and prices
 - Return structured responses for not-found and product-validation errors
 - **Separation of Concerns:** Implementation of Data Transfer Objects (DTO) and Mapper pattern to decouple entities from the API layer
+- **Pagination and Filtering:** GET products endpoint supports pagination and name-based filtering
+- **Unit Testing:** Service layer testing integrated using Mockito and Spring Boot Starter Test (mocking repositories without hitting an actual database)
 
 ## Technology
 
@@ -148,7 +150,9 @@ Run the test suite with the wrapper:
 ./mvnw test
 ```
 
-The current test suite includes a Spring application-context smoke test.
+The project includes unit tests for the service layer using Mockito (ProductServiceTest.java). These tests ensure that the business logic and exception handling function correctly in isolation without connecting to a real database.
+
+Run the tests automatically using Maven:
 
 Create a packaged JAR:
 
@@ -190,4 +194,4 @@ src/
 
 ## Current Scope
 
-The API currently supports full CRUD for products but only creation for suppliers. There is no authentication, authorization, or pagination implemented yet.
+The API currently supports full CRUD with pagination and filtering for products, but only creation for suppliers. There is no authentication or authorization implemented yet.
