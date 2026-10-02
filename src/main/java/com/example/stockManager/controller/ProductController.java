@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping; // Import the PutMapp
 import com.example.stockManager.dto.ProductRequest; // Import the ProductRequest DTO to handle product request data
 import com.example.stockManager.dto.ProductResponse; // Import the ProductResponse DTO to handle product response data
 import org.springframework.http.HttpStatus; // Import the HttpStatus class to handle HTTP status codes
-import java.util.List; // Import the List class to handle lists of products
 import jakarta.validation.Valid; // Import the Valid annotation to validate product request data
+import org.springframework.web.bind.annotation.RequestParam; // Import the RequestParam annotation to handle request parameters
+
+import org.springframework.data.domain.Page; // Import the Page class to handle pagination of product responses
+import org.springframework.data.domain.Pageable; // Import the Pageable class to handle pagination request data
 
 @RestController // The RestController annotation indicates that this class is a controller that handles HTTP requests
 @RequestMapping("/api/products") // The RequestMapping annotation specifies the base URL for all requests handled by this controller
@@ -33,8 +36,17 @@ public class ProductController {
 
     // Get all products
     @GetMapping
-    public List<ProductResponse> getAll() {
-        return service.findAll(); // Call the service to retrieve all products and return the list
+    // Return a paginated list of all products
+    public Page<ProductResponse> getAll(
+        // The name parameter is used to filter products by name
+        @RequestParam(required = false) String name,
+        // The Pageable parameter is used for pagination
+        Pageable pageable) {
+        // Call the service to find all products and return the list
+        return service.findAll(
+            name, // Pass the name parameter to the service to filter products by name
+            pageable // Pass the Pageable parameter to the service to get a paginated list of products
+        );
     }
 
     // Create a new product

@@ -1,4 +1,4 @@
-package com.example.stockManager.service;
+        package com.example.stockManager.service;
 
 import com.example.stockManager.dto.ProductRequest;
 import com.example.stockManager.exception.ProductNotFoundException;
@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import com.example.stockManager.exception.SupplierNotFoundException;
 import com.example.stockManager.dto.ProductResponse;
 import com.example.stockManager.mapper.ProductMapper;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProductService {
@@ -37,9 +38,14 @@ public class ProductService {
                 .orElseThrow(() -> new SupplierNotFoundException(id)); // Throw an exception if the supplier is not found
     }
 
-    // Retrieve all products from the repository
-    public List<ProductResponse> findAll() {
-        return repo.findAll().stream().map(ProductMapper::toResponse).toList(); // Call the repository to retrieve all products and return the list
+    // Find all products by name, with pagination support
+    public Page<ProductResponse> findAll(String name, Pageable pageable) {
+        // If the name is null or empty, return all products; otherwise, return products matching the name
+        if (name == null || name.isBlank()) {
+            return repo.findAll(pageable).map(ProductMapper::toResponse); // Return all products
+        } else {
+            return repo.findByNameContainingIgnoreCase(name, pageable).map(ProductMapper::toResponse); // Return products matching the name
+        }
     }
 
     // Find a product by its ID, throwing an exception if not found
