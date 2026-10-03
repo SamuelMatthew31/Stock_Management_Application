@@ -190,6 +190,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    // when product exists, should return 204 No Content
     void deleteProduct_WhenProductExists_Returns204NoContent() throws Exception {
         // 1. Arrange: Simpan supplier dan product ke DB
         Supplier supplier = supplierRepo.save(new Supplier("PT Sumber Makmur", "Jakarta"));
@@ -203,9 +204,11 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    // when product does not exist, should return 404 Not Found
     void deleteProduct_WhenProductDoesNotExist_Returns404NotFound() throws Exception {
-        Long nonExistentProductId = 999L;
+        Long nonExistentProductId = 999L; // non-existent productId
 
+        // call DELETE /api/products/{id} with non-existent productId and expect 404 Not Found
         mockMvc.perform(delete("/api/products/{id}", nonExistentProductId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
