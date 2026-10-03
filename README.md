@@ -11,7 +11,8 @@ A Spring Boot REST API for managing products and suppliers. Product records are 
 - Return structured responses for not-found and product-validation errors
 - **Separation of Concerns:** Implementation of Data Transfer Objects (DTO) and Mapper pattern to decouple entities from the API layer
 - **Pagination and Filtering:** GET products endpoint supports pagination and name-based filtering
-- **Unit Testing:** Service layer testing integrated using Mockito and Spring Boot Starter Test (mocking repositories without hitting an actual database)
+- **Security:** Integration of Spring Security and JWT (JSON Web Tokens) for authentication and role-based authorization (foundation implemented)
+- **Unit Testing:** Comprehensive service layer testing for all CRUD operations using Mockito and Spring Boot Starter Test
 - **Integration Testing:** Full HTTP API testing using MockMvc and @SpringBootTest to validate controller endpoints and actual database transactions
 
 ## Technology
@@ -21,6 +22,8 @@ A Spring Boot REST API for managing products and suppliers. Product records are 
 - Spring Web MVC
 - Spring Data JPA
 - Jakarta Bean Validation
+- Spring Security
+- JSON Web Token (jjwt)
 - PostgreSQL Database
 - Maven Wrapper
 
@@ -186,9 +189,11 @@ src/
 			dto/           Data Transfer Objects (e.g., ProductRequest, ProductResponse)
 			exception/     Not-found exceptions and global error handling
 			mapper/        Mapping logic between Entities and DTOs (e.g., ProductMapper)
-			model/         Product and Supplier JPA entities
+			config/        Configuration classes (e.g., PasswordConfig)
+			model/         JPA entities (Product, Supplier, User, Role)
 			repository/    Spring Data JPA repositories
-			service/       Application and persistence operations
+			security/      Security utilities (e.g., JWUtil)
+			service/       Application and persistence operations (ProductService, AuthService)
 		resources/
 			application.properties
 	test/java/com/example/stockManager/
@@ -199,4 +204,4 @@ src/
 
 ## Current Scope
 
-The API currently supports full CRUD with pagination and filtering for products, but only creation for suppliers. There is no authentication or authorization implemented yet.
+The API currently supports full CRUD with pagination and filtering for products, but only creation for suppliers. The groundwork for JWT-based authentication and authorization (Spring Security configs, User models, Password encoding, and Token utilities) has been implemented and is ready to be exposed via API endpoints.
